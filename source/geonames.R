@@ -1,5 +1,7 @@
 library(dplyr)
 library(readr)
+library(tibble)
+library(tidyr)
 library(testthat)
 
 # create temp directory
@@ -57,17 +59,19 @@ geonames %>%
 sub <- c("4379593")
 
 # create table of addresses
-add <- as_tibble(
-  name = c("Calvary Cemetery")
+add <- tibble(
+  name = c("Calvary Cemetery"),
   addrrecnum = c("10089598"),
-  address = c("5239 W Florissant Ave")
+  address = c("5239 W Florissant Ave"),
+  zip = c("63115")
 )
 
 # subset
 geonames %>%
   filter(geonameid %in% sub) %>%
-  select(geonameid, name, alt_names, latitutde, longitude)
-
-
+  rowid_to_column(var = "id") %>%
+  left_join(., add, by = "name") %>%
+  select(id, geonameid, name, addrrecnum, address, zip, latitude, longitude) %>%
+  write_csv(path = "data/STL_GEOCODER_Placename.csv")
 
 
