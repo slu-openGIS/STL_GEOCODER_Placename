@@ -55,3 +55,4 @@ parks$name <- gsub("\\sSTL", "", parks$name)
 st_geometry(parks) <- NULL
 
 # save to csv
+write_csv(parks, "data/parks.csv")
