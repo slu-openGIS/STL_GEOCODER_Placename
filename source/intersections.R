@@ -2,6 +2,7 @@
 library(tigris)
 library(sf)
 library(dplyr)
+library(magrittr)
 options(tigris_use_cache = FALSE)
 
 # Get Roads for St. Louis
@@ -9,8 +10,14 @@ stl_roads <- roads(29, 510, class = 'sf')
 stl_interstate <- filter(stl_roads, RTTYP == 'I')
 stl_roads <- filter(stl_roads, RTTYP != 'I')
 
+
 # Find Intersections for Interstates
 intersections <- st_intersection(stl_interstate, stl_roads)
+
+# Remove Spaces From Names
+intersections$FULLNAME %<>% gsub('- ', '-', .)
+
+
 intersections <-
   transmute(intersections,
     name = paste0(FULLNAME, ' at ', FULLNAME.1)
