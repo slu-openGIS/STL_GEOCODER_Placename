@@ -86,6 +86,23 @@ join2 <-
          id = id - 1
   )
 
+# Add Suffixes to Join2
+suffixes <- c('',' Northbound', ' Southbound', ' Eastbound', ' Westbound')
+
+join2 %<>%
+  rbind(.,.,.,.,.) %>%
+  arrange(id)
+join2$name %<>% paste0(suffixes)
+join2 %<>% mutate(id = row_number() * 2)
+
+# Reverse Names for Original Join Again (With Suffixes)
+join <-
+  join2 %>%
+  mutate(name = reverse_name(name),
+         id = id - 1
+  )
+
+# Join and Order
 export <- rbind(join, join2)
 export <- export[order(export$id),]
 
